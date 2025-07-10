@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ShopSpy — Price Scraper</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="container">
+    <h1>ShopSpy — Price Scraper</h1>
+
+    {% if message %}
+        <div class="message">{{ message }}</div>
+    {% endif %}
+
+    <form method="POST" action="/">
+        <label for="store">Store:</label>
+        <select name="store" id="store" required>
+            <option value="" selected>Select a store</option>
+            <option value="amazon">Amazon</option>
+            <option value="magalu">Magalu</option>
+            <option value="americanas">Americanas</option>
+        </select>
+
+        <input type="text" name="url" id="url" placeholder="Product URL or search term" required />
+
+        <label for="sort">Price order:</label>
+        <select name="sort" id="sort" required>
+            <option value="" selected>Select an option</option>
+            <option value="highest to lowest">Highest to Lowest</option>
+            <option value="lowest to highest">Lowest to Highest</option>
+        </select>
+
+        <label for="filetype">Save as:</label>
+        <select name="filetype" id="filetype" required>
+            <option value="" selected>Select file type</option>
+            <option value="excel(.xlsx)">Excel (.xlsx)</option>
+            <option value="csv(.csv)">CSV (.csv)</option>
+        </select>
+
+        <button type="submit">Download Data</button>
+        <button type="reset">Reset</button>
+    </form>
+</div>
+</body>
+</html>
