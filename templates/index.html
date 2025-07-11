@@ -34,11 +34,14 @@
         </select>
 
         <label for="filetype">Save as:</label>
-        <select name="filetype" id="filetype" required class="form-select mb-3">
+        <select name="filetype" id="filetype" required class="form-select mb-2">
             <option value="" selected>Select file type</option>
             <option value="excel(.xlsx)">Excel (.xlsx)</option>
             <option value="csv(.csv)">CSV (.csv)</option>
         </select>
+
+        <label for="limit">Rows to include:</label>
+        <input type="number" name="limit" id="limit" placeholder="e.g. 10" min="1" class="form-control mb-3" />
 
         <button type="submit" class="btn btn-primary">Download Data</button>
         <button type="reset" class="btn btn-secondary">Reset</button>

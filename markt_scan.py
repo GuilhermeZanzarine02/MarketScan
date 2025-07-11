@@ -14,6 +14,7 @@ def index():
         price_order = request.form.get('sort')
         file_type = request.form.get('filetype')
         store = request.form.get('store').lower()
+        rows = request.form.get('limit')
 
         if not base_url or not store:
             return render_template('index.html', message='Por favor, preencha a URL e escolha a loja.')
@@ -21,7 +22,7 @@ def index():
         try:
             if store == 'amazon':
                 all_data = amz_scraper_product_title(driver, base_url)
-                handle_data(all_data, file_type, price_order)
+                handle_data(all_data, file_type, price_order, rows)
                 message = 'Arquivo gerado com sucesso!'
             elif store == 'magalu':
                 message = 'Scraper da Magalu ainda em construção.'
