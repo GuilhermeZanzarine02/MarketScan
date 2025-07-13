@@ -19,38 +19,55 @@ def magalu_scraper_product(driver, base_url):
         human_delay()
 
         try:
-            wait.until(
-                EC.presence_of_all_elements_located(
-                    (By.CSS_SELECTOR, 'h2[data-testid="product-title"]')
-                )
-            )
+            wait.until(EC.presence_of_all_elements_located(
+                (By.CSS_SELECTOR, '[data-testid="product-card-content"]')
+            ))
 
             print(f'[Página {page_count}] Produtos encontrados.')
             soup = BeautifulSoup(driver.page_source, 'html.parser')
 
-            titles = soup.select('h2[data-testid="product-title"]')
-            regular_prices = soup.select('p[data-testid="installment"]')
-            pix_prices = soup.select('p[data-testid="price-value"]')
+            products = soup.select('[data-testid="product-card-content"]')
 
-            for title, regular_price, pix_price in zip(titles, regular_prices, pix_prices):
-    
-                regular_raw = regular_price.text.strip()
-                match_regular = re.search(r'R\$[\s]?([\d\.,]+)', regular_raw)
-                regular_numeric = float(match_regular.group(1).replace('.', '').replace(',', '.')) if match_regular else None
+            for product in products:
+                # Título
+                title_tag = product.select_one('h2[data-testid="product-title"]')
+                title = title_tag.text.strip() if title_tag else None
 
-                pix_raw = pix_price.text.strip()
-                match_pix = re.search(r'R\$[\s]?([\d\.,]+)', pix_raw)
-                pix_numeric = float(match_pix.group(1).replace('.', '').replace(',', '.')) if match_pix else None
+                # Preço regular
+                regular_tag = product.select_one('p[data-testid="installment"]')
+                if regular_tag:
+                    match_regular = re.search(r'R\$[\s]?([\d\.,]+)', regular_tag.text)
+                    regular_price = float(match_regular.group(1).replace('.', '').replace(',', '.')) if match_regular else None
+                else:
+                    regular_price = None
 
-                item_data = {
-                    'title': title.text.strip(),
-                    'regular price': regular_numeric,
-                    'pix price': pix_numeric
-                }
+                # Preço Pix
+                pix_tag = product.select_one('p[data-testid="price-value"]')
+                if pix_tag:
+                    match_pix = re.search(r'R\$[\s]?([\d\.,]+)', pix_tag.text)
+                    pix_price = float(match_pix.group(1).replace('.', '').replace(',', '.')) if match_pix else None
+                else:
+                    pix_price = None
+                
+                #Link do Produto
+                li_element = product.find_parent('li')
+                link_tag = li_element.select_one('a[data-testid="product-card-container"]') if li_element else None
+                link = (
+                    'https://www.magazineluiza.com.br' + link_tag['href']
+                    if link_tag and link_tag.has_attr('href') else None
+                )
 
-                all_data.append(item_data)
+                # Somente se tiver título
+                if title:
+                    all_data.append({
+                        'title': title,
+                        'regular price': regular_price,
+                        'pix price': pix_price,
+                        'Product Link' : link
+                    })
 
             page_count += 1
+
         except Exception as e:
             print(f"Erro na página {page_count}: {e}")
             break
