@@ -48,6 +48,22 @@ def magalu_scraper_product(driver, base_url):
                     pix_price = float(match_pix.group(1).replace('.', '').replace(',', '.')) if match_pix else None
                 else:
                     pix_price = None
+
+                #Avaliações
+                review_tag = product.select_one('span[format="score-count"]')
+                review = review_tag.text.strip() if review_tag else None
+                
+                if review:
+                    match = re.match(r'([\d.]+)\s+\((\d+)\)', review)
+                    if match:
+                        rating = match.group(1) 
+                        total_review = match.group(2)
+                    else:
+                        rating = None
+                        total_review = None
+                    
+                    rating = float(rating) if rating else None
+                    total_review = int(total_review) if total_review else None
                 
                 #Link do Produto
                 li_element = product.find_parent('li')
@@ -57,12 +73,13 @@ def magalu_scraper_product(driver, base_url):
                     if link_tag and link_tag.has_attr('href') else None
                 )
 
-                # Somente se tiver título
                 if title:
                     all_data.append({
                         'title': title,
                         'regular price': regular_price,
                         'pix price': pix_price,
+                        'rating' : rating,
+                        'total_review' : total_review,
                         'Product Link' : link
                     })
 
