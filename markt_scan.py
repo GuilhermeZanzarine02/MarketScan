@@ -8,6 +8,8 @@ from scrapers.amazon.amazon import amz_scraper_product_title
 from scrapers.magalu.magalu import magalu_scraper_product
 from scrapers.magalu.data.data_processing import magalu_handle_data
 
+from scrapers.mercado_livre.mercado_livre import mercado_livre_scraper_product
+from scrapers.mercado_livre.data.data_processing import mercado_livre_handle_data
 app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
@@ -28,12 +30,20 @@ def index():
                 all_data = amz_scraper_product_title(driver, base_url)
                 amazon_handle_data(all_data, file_type, price_order, rows)
                 message = 'Arquivo gerado com sucesso!'
+
             elif store == 'magalu':
                 all_data = magalu_scraper_product(driver, base_url)
                 magalu_handle_data(all_data, file_type, price_order, rows)
                 message = 'Arquivo gerado com sucesso!'
+
+            elif store == 'mercado_livre':
+                all_data = mercado_livre_scraper_product(driver, base_url)
+                mercado_livre_handle_data(all_data, file_type, price_order, rows)
+                message = 'Arquivo gerado com sucesso!'
+
             elif store == 'americanas':
                 message = 'Scraper da Americanas ainda em construção.'
+
             else:
                 message = 'Loja não suportada.'
         except Exception as e:
