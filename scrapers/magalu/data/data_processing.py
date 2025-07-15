@@ -37,11 +37,11 @@ def magalu_handle_data(all_data, file_type, price_order, rows):
         elif file == 'excel(.xlsx)' and order_file == 'raw':
             if rows:
                 rows = int(rows)
-                path = f"{downloads_path}/data_scraped_lowest_to_highest_price_{timestamp}.xlsx"
+                path = f"{downloads_path}/data_scraped_lraw_data_{timestamp}.xlsx"
                 data = data.head(rows)
                 data.to_excel(path, index=False)
             else:
-                path = f"{downloads_path}/data_scraped_highest_to_lowest_price_{timestamp}.xlsx"
+                path = f"{downloads_path}/data_scraped_raw_data_{timestamp}.xlsx"
                 data.to_excel(path, index=False)
 
         elif file == 'csv(.csv)' and order_file == 'highest to lowest':
@@ -69,11 +69,11 @@ def magalu_handle_data(all_data, file_type, price_order, rows):
         elif file == 'csv(.csv)' and order_file == 'raw':
             if rows:
                 rows = int(rows)
-                path = f"{downloads_path}/data_scraped_lowest_to_highest_price_{timestamp}.csv"
+                path = f"{downloads_path}/data_scraped_raw_data_{timestamp}.csv"
                 data = data.head(rows)
                 data.to_csv(path, index=False)
             else:
-                path = f"{downloads_path}/data_scraped_highest_to_lowest_price_{timestamp}.csv"
+                path = f"{downloads_path}/data_scraped_raw_data_{timestamp}.csv"
                 data.to_csv(path, index=False)
 
         if path is not None:
